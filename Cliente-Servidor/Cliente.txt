@@ -1,0 +1,74 @@
+
+/**
+ * Desarrollo de Sistemas Distribuidos - Cliente // 19.08.2021
+ * @author Oscar Cabagné
+ */
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+import java.nio.ByteBuffer;
+
+public class Cliente {
+    public static void main(String[] args){
+        try{
+            Socket conexion = new Socket("localhost", 50000);   // Se abre conexión al servidor a través del puerto 50000
+            DataOutputStream salida = new DataOutputStream(conexion.getOutputStream()); // Canal de comunicación para escribir mensajes al servidor
+            DataInputStream entrada = new DataInputStream(conexion.getInputStream());   // Canal de comunicación para leer mensajes del servidor.
+            
+            salida.writeInt(123); // Se envía al servidor el valor entero 123
+            salida.writeDouble(3.14); // Se envía al servidor el valor de punto flotante 3.14
+            salida.write("Hola".getBytes()); // Se envía una String en forma de literal, transformándolo a forma de Bytes.
+            
+            byte[] buffer = new byte[4];    // Se crea y asigna un arreglo vacío de 4 bytes. || Los arreglos de Bytes en Java se inicializan en cero.
+            entrada.read(buffer, 0, 4);     // Se lee el arreglo de Bytes, estableciendo el punto de inicio y el total de datos.
+            System.out.println(new String(buffer, "UTF-8"));    // Se crea un String con el arreglo de bytes y se define la codificación de texto UTF-8
+            
+            ByteBuffer b = ByteBuffer.allocate(5*8);
+            b.putDouble(1.1);
+            b.putDouble(2.2);
+            b.putDouble(3.3);
+            b.putDouble(4.4);
+            b.putDouble(5.5);
+            
+            byte[] a = b.array();
+            salida.write(a);
+            
+            salida.close();
+            entrada.close();
+            conexion.close();   // Se cierra la conexión. El servidor es notificado automáticamente.
+        }
+        catch(Exception e){
+            System.out.println("Ha ocurrido un error: " + e);
+        }
+    }
+    
+    static void read(DataInputStream f, byte[] b, int posicion, int longitud) throws Exception{
+        while(longitud > 0){
+            int n = f.read(b, posicion, longitud);
+            posicion += n;
+            longitud -= n;
+        }
+    }
+}
+
+___________________________________________________
+________00000000000___________000000000000_________
+______00000000_____00000___000000_____0000000______
+____0000000_____________000______________00000_____
+___0000000_______________0_________________0000____
+__000000____________________________________0000___
+__00000_____________________________________ 0000__
+_00000__________Carlos______________________00000__
+_00000________________Pineda_______________000000__
+__000000__________________Guerrero________0000000__
+___0000000______________________________0000000____
+_____000000____________________________000000______
+_______000000________________________000000________
+__________00000_____________________0000___________
+_____________0000_________________0000_____________
+_______________0000_____________000________________
+_________________000_________000___________________
+_________________ __000_____00_____________________
+______________________00__00_______________________
+________________________00_________________________
